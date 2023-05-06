@@ -12,10 +12,15 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var intensity: UISlider!
+    @IBOutlet weak var changeFilterButton: UIButton!
     
     var currentImage: UIImage!
     var context: CIContext!
-    var currentFilter: CIFilter!
+    var currentFilter: CIFilter! {
+        didSet {
+            changeFilterButton.setTitle(currentFilter.name, for: .normal)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +30,10 @@ class ViewController: UIViewController {
         
         context = CIContext()
         currentFilter = CIFilter(name: "CISepiaTone")
+        
+        changeFilterButton.setTitle(currentFilter.name, for: .normal)
+
+        
     }
 
     @IBAction func changeFilter(_ sender: UIButton) {
@@ -38,6 +47,7 @@ class ViewController: UIViewController {
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         present(ac, animated: true)
+        
     }
     
     func setFilter(action: UIAlertAction) {
