@@ -33,7 +33,6 @@ class ViewController: UIViewController {
         currentFilter = CIFilter(name: "CISepiaTone")
         
         changeFilterButton.setTitle(currentFilter.name, for: .normal)
-
         
     }
 
@@ -64,6 +63,11 @@ class ViewController: UIViewController {
         
         setCIFilterImage(image: currentImage)
         applyProcessing()
+    }
+    
+    func setCIFilterImage(image: UIImage) {
+        let beginImage = CIImage(image: image)
+        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
     }
     
     @IBAction func save(_ sender: UIButton) {
@@ -98,11 +102,6 @@ class ViewController: UIViewController {
         }
     }
     
-    func setCIFilterImage(image: UIImage) {
-        let beginImage = CIImage(image: image)
-        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
-    }
-    
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error {
             let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
@@ -134,8 +133,13 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         
         dismiss(animated: true)
         
+        imageView.alpha = 0
         currentImage = image
         setCIFilterImage(image: image)
         applyProcessing()
+        
+        UIView.animate(withDuration: 1, delay: 0, animations: {
+            self.imageView.alpha = 1
+        })
     }
 }
